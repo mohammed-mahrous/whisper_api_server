@@ -38,6 +38,7 @@ PyYAML==6.0.1
 requests==2.32.3
 scikit-learn==1.5.0
 scipy==1.13.1
+six==1.16.0
 soundfile==0.12.1
 soxr==0.3.7
 sympy==1.12.1
@@ -47,3 +48,4 @@ tqdm==4.66.4
 typing_extensions==4.12.1
 urllib3==2.2.1
 Werkzeug==3.0.3
+whisper==1.1.10

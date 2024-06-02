@@ -38,7 +38,7 @@ def cleanFilesCache():
 def wavToText(file_dest:str) -> str:
     import whisper
     try:
-        model = whisper.load_model('tiny')
+        model = whisper.load_model('medium')
         result = model.transcribe(file_dest,language='ar');
         return result['text'];
     except Exception as e:
