@@ -7,7 +7,7 @@ from pydub import AudioSegment , playback
 from typing import IO, Iterable
 
 
-RATE = 44100
+RATE = 16000
 HOST = '10.105.173.63'
 PORT = 5000
 
@@ -52,8 +52,6 @@ app = Flask(__name__)
 def transcript():
     if('wav-file' in request.files):
         file = request.files['wav-file']
-        file_bytes_len = len(file.stream.read())
-        print('len = {}'.format(file_bytes_len))
         seg:AudioSegment = AudioSegment.from_wav(file.stream)
         file = seg.export('temp-wav-{}.wav'.format(datetime.datetime.now().date()))
         text_result = wavToText(file.name);
