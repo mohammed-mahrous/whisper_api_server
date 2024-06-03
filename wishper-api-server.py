@@ -52,11 +52,15 @@ app = Flask(__name__)
 def transcript():
     if('wav-file' in request.files):
         file = request.files['wav-file']
+        print('creating segment')
         seg:AudioSegment = AudioSegment.from_wav(file.stream)
+        print('creating file')
         file = seg.export('temp-wav-{}.wav'.format(datetime.datetime.now().date()))
+        print('creating text results from file')
         text_result = wavToText(file.name);
         file.close()
         os.remove(file.name)
+        return
         print(f'result: {text_result}')
     return jsonify({'transcript': text_result})
 
