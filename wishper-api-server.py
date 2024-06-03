@@ -36,15 +36,12 @@ def exportFile(file:IO[bytes]) -> str:
     return file_dest
 
 
-def handleSegments(segments:list):
+def handleSegments(segments:list) -> str:
     o = []
     for segment in segments:
-        for word in segment.words:
-            # not stripping the spaces -- should not be merged with them!
-            w = word.word
-            t = (word.start, word.end, w)
-            o.append(t)
-    return o
+        o.append(segment.text)
+    text = " \r\n\r\n ".join([txt for txt in o])
+    return text
 
 
 def cleanFilesCache():
@@ -55,7 +52,9 @@ def wavToText(file_dest:str) -> str:
         model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
         segments = model.transcribe(file_dest);
         # print('segments {}'.format(segments))
-        return segments;
+        if(segments):
+            return handleSegments(segments);
+        return '';
     except Exception as e:
         print(f"Some Error! {e} happened while generating text for {file_dest}")
 
