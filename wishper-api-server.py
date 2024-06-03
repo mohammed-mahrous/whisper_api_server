@@ -54,7 +54,7 @@ def wavToText(file_dest:str) -> str:
     try:
         model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
         segments = model.transcribe(file_dest);
-        print('segments {}'.format(segments))
+        # print('segments {}'.format(segments))
         return segments;
     except Exception as e:
         print(f"Some Error! {e} happened while generating text for {file_dest}")
@@ -73,7 +73,7 @@ def transcript():
         text_result = wavToText(file.name);
         file.close()
         os.remove(file.name)
-        return
+        # return
         print(f'result: {text_result}')
     return jsonify({'transcript': text_result})
 
