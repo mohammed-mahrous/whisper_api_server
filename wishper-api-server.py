@@ -16,8 +16,8 @@ tgt_lan = "ar"
 model_size = 'medium'
 model = WhisperModel(model_size)
 
-# asr = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='auto')
-# online = OnlineASRProcessor(asr)
+asr = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
+online = OnlineASRProcessor(asr)
 
 def exportFile(file:IO[bytes]) -> str:
     instance_folder = current_app.instance_path
@@ -52,8 +52,10 @@ def cleanFilesCache():
 
 def wavToText(file_dest:str) -> str:
     try:
-        segments, info = model.transcribe(file_dest,language='ar');
-        return handleSegments(segments);
+        model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
+        segments = model.transcribe(file_dest);
+        print('segments {}'.format(segments))
+        return segments;
     except Exception as e:
         print(f"Some Error! {e} happened while generating text for {file_dest}")
 
