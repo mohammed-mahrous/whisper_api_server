@@ -36,13 +36,24 @@ def exportFile(file:IO[bytes]) -> str:
     return file_dest
 
 
+def handleSegments(segments:list):
+    o = []
+    for segment in segments:
+        for word in segment.words:
+            # not stripping the spaces -- should not be merged with them!
+            w = word.word
+            t = (word.start, word.end, w)
+            o.append(t)
+    return o
+
+
 def cleanFilesCache():
     pass
 
 def wavToText(file_dest:str) -> str:
     try:
-        result = model.transcribe(file_dest,language='ar');
-        return result['text'];
+        segments, info = model.transcribe(file_dest,language='ar');
+        return handleSegments(segments);
     except Exception as e:
         print(f"Some Error! {e} happened while generating text for {file_dest}")
 
