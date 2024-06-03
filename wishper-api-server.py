@@ -8,10 +8,14 @@ from typing import IO, Iterable
 
 
 RATE = 44100
+HOST = '10.105.173.63'
+PORT = 5000
+
 src_lan = "ar"
 tgt_lan = "ar"
-model_size = 'tiny'
+model_size = 'medium'
 model = WhisperModel(model_size)
+
 # asr = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='auto')
 # online = OnlineASRProcessor(asr)
 
@@ -62,5 +66,5 @@ def transcript():
 
 if __name__ == '__main__':
     from waitress import serve
-    serve(app, host="10.105.173.63", port=8080)
+    serve(app, host=HOST, port=PORT)
     # app.run(host='localhost',debug=True, port=5000)
