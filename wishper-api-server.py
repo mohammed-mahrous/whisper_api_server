@@ -67,4 +67,4 @@ def transcript():
 if __name__ == '__main__':
     # from waitress import serve
     # serve(app, host=HOST, port=PORT)
-    app.run(host='HOST',debug=False, port=PORT)
+    app.run(host=HOST,debug=False, port=PORT)
