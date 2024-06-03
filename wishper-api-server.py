@@ -65,6 +65,6 @@ def transcript():
     return jsonify({'transcript': text_result})
 
 if __name__ == '__main__':
-    from waitress import serve
-    serve(app, host=HOST, port=PORT)
-    # app.run(host='HOST',debug=False, port=PORT)
+    # from waitress import serve
+    # serve(app, host=HOST, port=PORT)
+    app.run(host='HOST',debug=False, port=PORT)
