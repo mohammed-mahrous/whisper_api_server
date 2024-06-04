@@ -13,7 +13,7 @@ PORT = 5000
 
 src_lan = "ar"
 tgt_lan = "ar"
-model_size = 'medium'
+model_size = 'large-v3'
 model = WhisperModel(model_size)
 
 asr = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
