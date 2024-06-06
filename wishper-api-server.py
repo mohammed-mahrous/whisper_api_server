@@ -19,21 +19,10 @@ model = WhisperModel(model_size)
 asr = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
 online = OnlineASRProcessor(asr)
 
-def exportFile(file:IO[bytes]) -> str:
-    instance_folder = current_app.instance_path
-    upload_folder = current_app.config.get('UPLOAD_FOLDER', 'uploads')
-    folder = os.path.join(instance_folder,upload_folder)
-    if(not os.path.exists(folder)):
-        os.makedirs(folder)
-
-    file_dest = os.path.join(folder,'recorded_audio.wav')
-    file_bytes_len = len(file.read())
-    sample_width = 1 if file_bytes_len % (1 * 1) == 0 else 2
-    sound:AudioSegment = AudioSegment(file.read(),channels=1,frame_rate=RATE,sample_width=sample_width)
-    playback.play(sound)
-    sound.export(file_dest,format='wav')
-    # print(f'{sound}', file=sys.stderr, flush=True)
-    return file_dest
+def exportFile(file):
+    seg:AudioSegment = AudioSegment.from_wav(file.stream)
+    exported = seg.export('temp-wav-{}.wav'.format(getFormattedDate()))
+    return exported
 
 
 def handleSegments(segments:list) -> str:
@@ -51,7 +40,6 @@ def wavToText(file_dest:str) -> str:
     try:
         model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
         segments = model.transcribe(file_dest);
-        # print('segments {}'.format(segments))
         if(segments):
             return handleSegments(segments);
         return '';
@@ -60,19 +48,18 @@ def wavToText(file_dest:str) -> str:
 
 app = Flask(__name__)
 
+def getFormattedDate() -> str:
+    now = datetime.datetime.now()
+    return f'{now.day}-{now.hour}-{now.minute}-{now.second}'
+
 @app.route('/transcript', methods = ['POST'])
 def transcript():
     if('wav-file' in request.files):
         file = request.files['wav-file']
-        print('creating segment')
-        seg:AudioSegment = AudioSegment.from_wav(file.stream)
-        print('creating file')
-        file = seg.export('temp-wav-{}.wav'.format(datetime.datetime.now().date()))
-        print('creating text results from file')
-        text_result = wavToText(file.name);
-        file.close()
-        os.remove(file.name)
-        # return
+        exported = exportFile(file=file)
+        text_result = wavToText(exported.name);
+        exported.close()
+        os.remove(exported.name)
         print(f'result: {text_result}')
     return jsonify({'transcript': text_result})
 
