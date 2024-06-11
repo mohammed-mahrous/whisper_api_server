@@ -14,10 +14,8 @@ PORT = 5000
 src_lan = "ar"
 tgt_lan = "ar"
 model_size = 'large-v3'
-model = WhisperModel(model_size)
+model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
 
-asr = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
-online = OnlineASRProcessor(asr)
 
 def exportFile(file):
     seg:AudioSegment = AudioSegment.from_wav(file.stream)
@@ -38,7 +36,6 @@ def cleanFilesCache():
 
 def wavToText(file_dest:str) -> str:
     try:
-        model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
         segments = model.transcribe(file_dest);
         if(segments):
             return handleSegments(segments);
