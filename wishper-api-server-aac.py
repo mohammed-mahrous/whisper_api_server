@@ -17,7 +17,8 @@ model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
 
 def exportFile(file):
     seg:AudioSegment = AudioSegment.from_file(file.stream, 'aac')
-    exported = seg.export('temp-file-{}.aac'.format(getFormattedDate()))
+    exported = seg.export('temp-file-{}.wav'.format(getFormattedDate(),format="wav"))
+
     return exported
 
 
