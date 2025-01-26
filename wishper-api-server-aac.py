@@ -49,7 +49,7 @@ def getFormattedDate() -> str:
 
 @app.route('/transcript/aac', methods = ['POST'])
 def transcript():
-    if('wav-file' in request.files):
+    if('file' in request.files):
         file = request.files['file']
         exported = exportFile(file=file)
         text_result = wavToText(exported.name);
