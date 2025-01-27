@@ -17,7 +17,7 @@ model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
 
 def exportFile(file):
     seg:AudioSegment = AudioSegment.from_file(file.stream, 'aac')
-    exported = seg.export('temp-file-{}.wav'.format(getFormattedDate()),format="wav", parameters=["-ar", "16000", "-ac", "1"])
+    exported = seg.export('temp-file-{}.mp3'.format(getFormattedDate()),format="wav", parameters=["-ar", "16000", "-ac", "1"])
 
     return exported
 
@@ -50,6 +50,9 @@ def getFormattedDate() -> str:
 
 @app.route('/transcript/aac', methods = ['POST'])
 def transcript():
+    print(request)
+    print(request.files)
+    exit()
     if('file' in request.files):
         file = request.files['file']
         exported = exportFile(file=file)
