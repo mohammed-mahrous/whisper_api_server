@@ -50,10 +50,6 @@ def getFormattedDate() -> str:
 
 @app.route('/transcript/aac', methods = ['POST'])
 def transcript():
-    print(request)
-    print(request.files)
-    for key in request.files:
-        print(f'{key}: -> {request.files[key]}')
 
     if('file' in request.files):
         file = request.files['file']
@@ -62,7 +58,8 @@ def transcript():
         exported.close()
         os.remove(exported.name)
         print(f'result: {text_result}')
-    return jsonify({'transcript': text_result})
+        return jsonify({'transcript': text_result})
+    jsonify({"error": "No file provided"}), 400
 
 if __name__ == '__main__':
     # from waitress import serve
