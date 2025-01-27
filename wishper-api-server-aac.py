@@ -54,8 +54,7 @@ def transcript():
     print(request.files)
     for key in request.files:
         print(f'{key}: -> {request.files[key]}')
-
-    exit()
+        
     if('file' in request.files):
         file = request.files['file']
         exported = exportFile(file=file)
