@@ -1,7 +1,7 @@
 from flask import Flask, jsonify , request
 from whisper_online import *
 from faster_whisper import *
-import os , datetime
+import os , datetime , mimetypes
 from pydub import AudioSegment
 
 
@@ -16,8 +16,8 @@ model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
 
 
 def exportFile(file):
-    seg:AudioSegment = AudioSegment.from_file(file.stream, 'aac')
-    exported = seg.export('temp-file-{}.mp3'.format(getFormattedDate()),format="wav", parameters=["-ar", "16000", "-ac", "1"])
+    seg:AudioSegment = AudioSegment.from_file(file.stream, 'mp3')
+    exported = seg.export('temp-file-{}.mp3'.format(getFormattedDate()))
 
     return exported
 
@@ -54,7 +54,7 @@ def transcript():
     print(request.files)
     for key in request.files:
         print(f'{key}: -> {request.files[key]}')
-        
+
     if('file' in request.files):
         file = request.files['file']
         exported = exportFile(file=file)
