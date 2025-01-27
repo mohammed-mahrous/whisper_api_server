@@ -1,12 +1,12 @@
 from flask import Flask, jsonify , request
 from whisper_online import *
 from faster_whisper import *
-import os , datetime , mimetypes
+import os , datetime
 from pydub import AudioSegment
 
 
 RATE = 16000
-HOST = 'localhost'
+HOST = '10.105.173.63'
 PORT = 5000
 
 src_lan = "ar"
@@ -50,16 +50,18 @@ def getFormattedDate() -> str:
 
 @app.route('/transcript/aac', methods = ['POST'])
 def transcript():
-
-    if('file' in request.files):
-        file = request.files['file']
-        exported = exportFile(file=file)
-        text_result = wavToText(exported.name);
-        exported.close()
-        os.remove(exported.name)
-        print(f'result: {text_result}')
-        return jsonify({'transcript': text_result})
-    jsonify({"error": "No file provided"}), 400
+    try:
+        if('file' in request.files):
+            file = request.files['file']
+            exported = exportFile(file=file)
+            text_result = wavToText(exported.name);
+            exported.close()
+            os.remove(exported.name)
+            print(f'result: {text_result}') 
+            return jsonify({'transcript': text_result})
+        jsonify({"error": "No file provided"}), 400
+    except Exception as e:
+        return jsonify({f"e: {e}"}), 500
 
 if __name__ == '__main__':
     # from waitress import serve
