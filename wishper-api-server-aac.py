@@ -6,7 +6,7 @@ from pydub import AudioSegment
 
 
 RATE = 16000
-HOST = '10.105.173.63'
+HOST = '127.0.0.1'
 PORT = 5000
 
 src_lan = "ar"
