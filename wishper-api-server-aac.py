@@ -3,19 +3,24 @@ from whisper_online import *
 from faster_whisper import *
 import os , datetime
 from pydub import AudioSegment
+from typing import IO , Any
+from os import PathLike
 
 
-RATE = 16000
-HOST = '127.0.0.1'
-PORT = 5000
+RATE:int = 16000
+HOST:str = '127.0.0.1'
+PORT:int = 5000
 
-src_lan = "ar"
-tgt_lan = "ar"
-model_size = 'large-v3'
-model = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device='cuda')
+src_lan:str = "ar"
+tgt_lan:str = "ar"
+model_size:str = 'large-v3'
+test_model_size:str = 'small'
+device:str = 'cuda'
+test_device:str ='cpu'
+model:FasterWhisperASR = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device=device)
 
 
-def exportFile(file):
+def exportFile(file) -> IO[Any] | Any | PathLike: 
     seg:AudioSegment = AudioSegment.from_file(file.stream, 'mp3')
     exported = seg.export('temp-file-{}.mp3'.format(getFormattedDate()))
 
@@ -30,7 +35,7 @@ def handleSegments(segments:list) -> str:
     return text
 
 
-def cleanFilesCache():
+def cleanFilesCache() -> None:
     pass
 
 def wavToText(file_dest:str) -> str:
@@ -41,6 +46,12 @@ def wavToText(file_dest:str) -> str:
         return '';
     except Exception as e:
         print(f"Some Error! {e} happened while generating text for {file_dest}")
+        
+        
+def clean_text(text: str) -> str:
+    if 'اشتركوا في القناة' in text:
+        return text.replace('اشتركوا في القناة', '') if '\r\n\r\n' in text else ''
+    return text
 
 app = Flask(__name__)
 
@@ -54,7 +65,8 @@ def transcript():
         if('file' in request.files):
             file = request.files['file']
             exported = exportFile(file=file)
-            text_result = wavToText(exported.name);
+            text_result = wavToText(exported.name)
+            text_result = clean_text(text_result)
             exported.close()
             os.remove(exported.name)
             print(f'result: {text_result}') 
