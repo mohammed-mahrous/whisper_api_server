@@ -99,7 +99,7 @@ def transcript():
             exported.close()
             os.remove(exported.name)
             print(f'transcript: {text_result}') 
-            print(f'translation: {translation if translation else ''}')
+            print(f'translation: {translation}')
             return jsonify({"data":{'transcript': text_result, 'translation': translation if(translation) else ''}}) if(translate) else jsonify({'data': {'transcript':text_result}})
         jsonify({"error": "No file provided"}), 400
     except Exception as e:
