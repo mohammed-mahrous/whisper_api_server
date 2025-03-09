@@ -92,17 +92,17 @@ def transcript():
             file = request.files['file']
             exported = exportFile(file=file)
             text_result = wavToText(exported.name)
-            text_result_cleaned = clean_text(text_result)
+            text_result = clean_text(text_result)
             
             if(translate):
                 translation = wavToText(exported.name,translate=True)
-                translation_cleaned = clean_text(translation,en=True)
+                translation = clean_text(translation,en=True)
             exported.close()
             os.remove(exported.name)
             # print(f'transcript: {text_result}') 
             # print(f'translation: {translation if translation else ''}')
             if(translation):
-                return jsonify({"data":{'transcript':{'regular': text_result, 'cleaned': text_result_cleaned},'translation':{'regular': translation, 'cleaned': translation_cleaned},},},)
+                return jsonify({"data":{'transcript':text_result,'translation':translation}},)
             else: 
                 return jsonify({'data': {'transcript':text_result}})
             return jsonify({"data":{'transcript': text_result, 'translation': translation if(translation) else ''}}) if(translate) else jsonify({'data': {'transcript':text_result}})
