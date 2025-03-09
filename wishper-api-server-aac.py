@@ -19,7 +19,7 @@ test_model_size:str = 'small'
 device:str = 'cuda'
 test_device:str ='cpu'
 test_compute_type = 'int8'
-model:FasterWhisperASR = FasterWhisperASR(lan=tgt_lan, modelsize=test_model_size,device=test_device,compute_type=test_compute_type)
+model:FasterWhisperASR = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device=device)
 
 
 def exportFile(file) -> IO[Any] | Any | PathLike: 
