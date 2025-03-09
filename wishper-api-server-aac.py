@@ -10,7 +10,7 @@ from os import PathLike
 
 RATE:int = 16000
 HOST:str = '10.143.232.21'
-PORT:int = 5000
+PORT:int = 5001
 
 src_lan:str = "ar"
 tgt_lan:str = "ar"
