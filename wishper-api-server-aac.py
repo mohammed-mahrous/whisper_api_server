@@ -19,7 +19,7 @@ test_model_size:str = 'small'
 device:str = 'cuda'
 test_device:str ='cpu'
 test_compute_type = 'int8'
-model:FasterWhisperASR = FasterWhisperASR(lan=tgt_lan, modelsize=model_size,device=device)
+model:FasterWhisperASR = FasterWhisperASR(lan=tgt_lan, modelsize=test_model_size,device=test_device,compute_type=test_compute_type)
 
 
 def exportFile(file) -> IO[Any] | Any | PathLike: 
@@ -85,21 +85,26 @@ def getFormattedDate() -> str:
 def transcript():
     try:
         print(request.form)
+        translation = None
         
         if('file' in request.files):
             translate:bool = request.form['translate'].lower() == "yes"
             file = request.files['file']
             exported = exportFile(file=file)
             text_result = wavToText(exported.name)
-            text_result = clean_text(text_result)
+            text_result_cleaned = clean_text(text_result)
             
             if(translate):
                 translation = wavToText(exported.name,translate=True)
-                translation = clean_text(translation,en=True)
+                translation_cleaned = clean_text(translation,en=True)
             exported.close()
             os.remove(exported.name)
-            print(f'transcript: {text_result}') 
-            print(f'translation: {translation}')
+            # print(f'transcript: {text_result}') 
+            # print(f'translation: {translation if translation else ''}')
+            if(translation):
+                return jsonify({"data":{'transcript':{'regular': text_result, 'cleaned': text_result_cleaned},'translation':{'regular': translation, 'cleaned': translation_cleaned},},},)
+            else: 
+                return jsonify({'data': {'transcript':text_result}})
             return jsonify({"data":{'transcript': text_result, 'translation': translation if(translation) else ''}}) if(translate) else jsonify({'data': {'transcript':text_result}})
         jsonify({"error": "No file provided"}), 400
     except Exception as e:
