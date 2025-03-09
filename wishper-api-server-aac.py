@@ -8,7 +8,7 @@ from os import PathLike
 
 
 RATE:int = 16000
-HOST:str = '127.0.0.1'
+HOST:str = '10.143.232.21'
 PORT:int = 5000
 
 src_lan:str = "ar"
